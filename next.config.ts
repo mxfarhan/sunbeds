@@ -35,7 +35,8 @@ const storagePatterns = devHosts.flatMap((hostname) =>
 );
 
 const nextConfig: NextConfig = {
-  output: "standalone",
+  // Standalone is for Hostinger/PM2 self-host. Vercel must NOT use it (breaks NFT tracing).
+  ...(process.env.VERCEL ? {} : { output: "standalone" as const }),
   reactCompiler: false,
   // Required for iPhone / LAN access during local dev (Next.js 16 blocks HMR otherwise)
   allowedDevOrigins: devHosts,
