@@ -1,5 +1,8 @@
+import { Suspense } from "react";
 import HomePage from "@/components/homePage/HomePage";
 import JsonLd from "@/components/Schema/JsonLd";
+import Layout from "@/components/layout/Layout";
+import HomePageSkeleton from "@/components/skeletons/pages/HomePageSkeleton";
 import { generateMetaInfo, getSchemaMarkup } from "@/hooks/useGenerateMetaInfo";
 import { Metadata } from "next";
 
@@ -23,7 +26,9 @@ export default async function Home({ params }: { params: Promise<{ langCode: str
   return (
     <>
       <main>
-        <HomePage />
+        <Suspense fallback={<Layout><HomePageSkeleton /></Layout>}>
+          <HomePage />
+        </Suspense>
       </main>
       {schemaMarkup && <JsonLd data={schemaMarkup} />}
     </>

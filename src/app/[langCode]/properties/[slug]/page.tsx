@@ -53,14 +53,17 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 
 const Page = async ({ params }: { params: Promise<{ slug: string }> }) => {
     const { slug } = await params
-    const basicDetails = await getSettingsBasicDetails()
-    const isSunbedMode = basicDetails?.booking_mode === 'sunbed' || basicDetails?.property_type === 'Resort'
 
-    // Always try both — settings SSR can fail; resort slug still needs resort API
-    const [resortRes, propertyRes] = await Promise.all([
-        getResortDetails({ slug }),
-        getPropertyDetails({ slug }),
-    ])
+    // Prefer resort first; only hit property-details when needed (faster SSR)
+    const resortRes = await getResortDetails({ slug })
+    const propertyRes = resortRes?.data
+        ? null
+        : await getPropertyDetails({ slug })
+
+    const basicDetails = resortRes?.data
+        ? null
+        : await getSettingsBasicDetails()
+    const isSunbedMode = basicDetails?.booking_mode === 'sunbed' || basicDetails?.property_type === 'Resort'
 
     const schemaMarkup = propertyRes?.data?.schema_markup
         ? (() => { try { return JSON.parse(propertyRes.data.schema_markup) } catch { return null } })()

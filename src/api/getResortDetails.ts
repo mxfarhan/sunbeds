@@ -6,7 +6,8 @@ import { getServerApiBase } from "@/lib/apiBase";
 export const getResortDetails = cache(async ({ slug }: { slug: string }): Promise<ResortDetailsApiResponse | null> => {
   try {
     const response = await axios.get(
-      `${getServerApiBase()}/resorts/${slug}`
+      `${getServerApiBase()}/resorts/${slug}`,
+      { timeout: 12000 }
     );
     const data = response.data;
     if (!data || data.error) return null;

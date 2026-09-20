@@ -1,5 +1,7 @@
 import { Suspense } from "react"
 import PropertyPage from "@/components/pagesComponent/property/PropertyPage"
+import Layout from "@/components/layout/Layout"
+import PropertyPageSkeleton from "@/components/skeletons/pages/PropertyPageSkeleton"
 import { generateMetaInfo, getSchemaMarkup } from "@/hooks/useGenerateMetaInfo"
 import { Metadata } from "next"
 import JsonLd from "@/components/Schema/JsonLd"
@@ -22,7 +24,7 @@ const Page = async ({ params }: { params: Promise<{ langCode: string }> }) => {
 
     return (
         <>
-            <Suspense>
+            <Suspense fallback={<Layout><PropertyPageSkeleton /></Layout>}>
                 <PropertyPage />
             </Suspense>
             {schemaMarkup && <JsonLd data={schemaMarkup} />}

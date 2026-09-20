@@ -7,7 +7,7 @@ export const getPropertyDetails = cache(async ({ slug }: { slug: string }): Prom
   try {
     const response = await axios.get(
       `${getServerApiBase()}/property-details`,
-      { params: { slug } }
+      { params: { slug }, timeout: 12000 }
     );
     const data = response.data;
     if (!data || data.error) return null;
