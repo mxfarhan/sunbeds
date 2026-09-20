@@ -14,6 +14,7 @@ import { LayoutArea, LayoutSunbed, SunbedLayoutData } from '@/hooks/queries/useS
 import BeachMapCanvas from './BeachMapCanvas';
 import { useIsMobile } from '@/hooks/useMobile';
 import { formatPriceHelper } from '@/utils/helpers';
+import { PiX } from 'react-icons/pi';
 
 interface SunbedSelectModalProps {
   open: boolean;
@@ -53,6 +54,9 @@ const SunbedSelectModal = ({
       >
         <DialogHeader>
           <DialogTitle>{t('selectSunbeds') || 'Select your sunbeds'}</DialogTitle>
+          <Typography variant="caption" className="textSecondaryColor!">
+            {t('tapToSelectOrDeselect') || 'Tap a sunbed to select or deselect it'}
+          </Typography>
         </DialogHeader>
 
         <div className="flex-1 overflow-y-auto overflow-x-hidden py-2 min-h-0">
@@ -62,7 +66,7 @@ const SunbedSelectModal = ({
             <BeachMapCanvas
               areas={areas}
               layoutData={layoutData}
-              selectedIds={selectedSunbeds.map((s) => s.id)}
+              selectedIds={selectedSunbeds.map((s) => Number(s.id))}
               onToggleSunbed={onToggleSunbed}
             />
           ) : (
@@ -74,10 +78,27 @@ const SunbedSelectModal = ({
 
         <div className="border-t pt-4 space-y-3 shrink-0">
           {selectedSunbeds.length > 0 && (
-            <div className="space-y-1">
-              <Typography variant="desc2" className="textPrimaryColor!">
-                {selectedSunbeds.length} {t('sunbedsSelected')}: {selectedSunbeds.map((s) => s.code).join(', ')}
+            <div className="space-y-2">
+              <Typography variant="desc2" weight="medium" className="textPrimaryColor!">
+                {selectedSunbeds.length} {t('sunbedsSelected') || 'sunbed(s) selected'}
               </Typography>
+              <div className="flex flex-wrap gap-2">
+                {selectedSunbeds.map((s) => (
+                  <button
+                    key={s.id}
+                    type="button"
+                    onClick={() => onToggleSunbed(s)}
+                    className="inline-flex items-center gap-1.5 rounded-full border border-sky-600 bg-sky-50 px-3 py-1.5 text-sm font-semibold text-sky-800 hover:bg-sky-100"
+                    title={t('removeSunbed') || 'Remove'}
+                  >
+                    <span>{s.code}</span>
+                    <span className="text-xs font-normal text-sky-700">
+                      {currencySymbol}{formatPriceHelper(s.price)}
+                    </span>
+                    <PiX className="text-base shrink-0" />
+                  </button>
+                ))}
+              </div>
               <div className="flex items-center justify-between gap-4">
                 <Typography variant="desc2" className="textSecondaryColor!">
                   {t('selectionTotal') || 'Selection total'}
@@ -86,9 +107,6 @@ const SunbedSelectModal = ({
                   {currencySymbol}{formatPriceHelper(selectionTotal)}
                 </Typography>
               </div>
-              <Typography variant="caption" className="textSecondaryColor!">
-                {selectedSunbeds.map((s) => `${s.code}: ${currencySymbol}${formatPriceHelper(s.price)}`).join(' · ')}
-              </Typography>
             </div>
           )}
           <DialogFooter className="flex gap-2 sm:gap-2">

@@ -8,7 +8,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { Button } from '@/components/storyBook/atoms/Button';
 import { Typography } from '@/components/storyBook/atoms/Typography';
 import { useTranslation } from '@/hooks/useTranslation';
-import { PiCalendarDots, PiCheckCircleFill } from 'react-icons/pi';
+import { PiCalendarDots, PiCheckCircleFill, PiX } from 'react-icons/pi';
 import { formateDateForApi } from '@/utils/helpers';
 import { ResortDetails, ResortSlot } from '@/hooks/queries/useResortDetails';
 import { useSunbedLayout, LayoutSunbed } from '@/hooks/queries/useSunbedLayout';
@@ -102,10 +102,26 @@ const SunbedBookingPanel = ({ resort }: SunbedBookingPanelProps) => {
 
   const handleToggleSunbed = (sunbed: LayoutSunbed) => {
     setDraftSunbeds((prev) => {
-      const exists = prev.find((s) => s.id === sunbed.id);
-      if (exists) return prev.filter((s) => s.id !== sunbed.id);
-      return [...prev, sunbed];
+      const id = Number(sunbed.id);
+      const exists = prev.some((s) => Number(s.id) === id);
+      if (exists) return prev.filter((s) => Number(s.id) !== id);
+      return [...prev, { ...sunbed, id }];
     });
+  };
+
+  const handleRemoveConfirmed = (sunbedId: number) => {
+    const next = confirmedSunbeds.filter((s) => Number(s.id) !== Number(sunbedId));
+    setConfirmedSunbeds(next);
+    setDraftSunbeds(next);
+    if (next.length === 0) {
+      setSelectionConfirmed(false);
+      setShowGuestForm(false);
+      setLockGroup(null);
+      setSelectedGateway(null);
+      setQuoteTotalAmount(null);
+      setPendingBookingNumber(null);
+      setPaymentErrorHint(null);
+    }
   };
 
   const handleConfirmSelection = () => {
@@ -266,13 +282,27 @@ const SunbedBookingPanel = ({ resort }: SunbedBookingPanelProps) => {
         </Button>
 
         {selectionConfirmed && confirmedSunbeds.length > 0 && (
-          <div className="space-y-2 p-3 rounded-xl bodyBg">
+          <div className="space-y-3 p-3 rounded-xl bodyBg">
             <Typography variant="desc2" weight="medium" className="textPrimaryColor!">
               {confirmedSunbeds.length} {t('sunbedsSelected') || 'sunbed(s) selected'}
             </Typography>
-            <Typography variant="desc2" className="textSecondaryColor!">
-              {confirmedSunbeds.map((s) => s.code).join(', ')}
-            </Typography>
+            <div className="flex flex-wrap gap-2">
+              {confirmedSunbeds.map((s) => (
+                <button
+                  key={s.id}
+                  type="button"
+                  onClick={() => handleRemoveConfirmed(Number(s.id))}
+                  className="inline-flex items-center gap-1.5 rounded-full border border-sky-600 bg-sky-50 px-3 py-1.5 text-sm font-semibold text-sky-800 hover:bg-sky-100"
+                  title={t('removeSunbed') || 'Remove sunbed'}
+                >
+                  <span>{s.code}</span>
+                  <span className="text-xs font-normal text-sky-700">
+                    {resort.currency_symbol}{formatPriceHelper(s.price)}
+                  </span>
+                  <PiX className="text-base shrink-0" />
+                </button>
+              ))}
+            </div>
             <Typography variant="h6" weight="semibold" className="textPrimaryColor!">
               {resort.currency_symbol}{formatPriceHelper(displayTotal)} {quoteTotalAmount ? '' : `+ ${t('taxesAndFees') || 'taxes'}`}
             </Typography>

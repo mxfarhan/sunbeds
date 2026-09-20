@@ -63,10 +63,14 @@ export default function LayoutRenderer({ data, selectedIds, onToggleSunbed }: La
     [zoom, pan.x, pan.y],
   );
 
+  const selectedIdSet = new Set(selectedIds.map((id) => Number(id)));
+
   const handleObjectTap = (obj: LayoutObject) => {
     const sunbed = layoutObjectToSunbed(obj);
     if (!sunbed) return;
-    if (sunbed.status !== 'available') return;
+    // Allow toggle off even if status flips unexpectedly while selected
+    const isSelected = selectedIdSet.has(Number(sunbed.id));
+    if (sunbed.status !== 'available' && !isSelected) return;
     onToggleSunbed(sunbed);
   };
 
@@ -91,8 +95,12 @@ export default function LayoutRenderer({ data, selectedIds, onToggleSunbed }: La
           {[...objects]
             .sort((a, b) => a.z_index - b.z_index)
             .map((obj) => {
-              const selected = obj.sunbed_id ? selectedIds.includes(obj.sunbed_id) : false;
-              const canTap = Boolean(obj.bookable && obj.sunbed_id && obj.status === 'available');
+              const selected = obj.sunbed_id != null && selectedIdSet.has(Number(obj.sunbed_id));
+              const canTap = Boolean(
+                obj.bookable &&
+                  obj.sunbed_id &&
+                  (obj.status === 'available' || selected),
+              );
 
               return (
                 <Group
@@ -111,14 +119,14 @@ export default function LayoutRenderer({ data, selectedIds, onToggleSunbed }: La
                     if (stage) stage.container().style.cursor = 'default';
                   }}
                 >
-                  {/* Hit target — visual shapes use listening=false */}
+                  <MapObjectRenderer obj={obj} selected={selected} />
+                  {/* Hit target on top so selected beds stay clickable to deselect */}
                   <Rect
                     width={obj.width}
                     height={obj.height}
-                    fill={canTap || selected ? 'rgba(0,0,0,0.001)' : 'rgba(0,0,0,0)'}
-                    listening={canTap || selected}
+                    fill="transparent"
+                    listening={canTap}
                   />
-                  <MapObjectRenderer obj={obj} selected={selected} />
                 </Group>
               );
             })}

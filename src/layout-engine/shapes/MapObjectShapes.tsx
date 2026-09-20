@@ -76,19 +76,44 @@ export function SunbedShape({
       )}
 
       {selected && (
-        <Rect
-          x={-3}
-          y={-3}
-          width={width + 6}
-          height={height + 6}
-          cornerRadius={8}
-          stroke="#2563eb"
-          strokeWidth={3}
-          shadowColor="#2563eb"
-          shadowBlur={8}
-          shadowOpacity={0.45}
-          listening={false}
-        />
+        <Group listening={false}>
+          <Rect
+            width={width}
+            height={height}
+            cornerRadius={6}
+            fill="rgba(37, 99, 235, 0.38)"
+          />
+          <Rect
+            x={-4}
+            y={-4}
+            width={width + 8}
+            height={height + 8}
+            cornerRadius={10}
+            stroke="#1d4ed8"
+            strokeWidth={Math.max(5, Math.min(width, height) * 0.1)}
+            shadowColor="#1d4ed8"
+            shadowBlur={12}
+            shadowOpacity={0.55}
+          />
+          <Circle
+            x={width - 8}
+            y={10}
+            radius={Math.max(10, Math.min(width, height) * 0.14)}
+            fill="#1d4ed8"
+            stroke="#fff"
+            strokeWidth={2}
+          />
+          <Text
+            text="✓"
+            x={width - 8 - Math.max(10, Math.min(width, height) * 0.14)}
+            y={10 - Math.max(8, Math.min(width, height) * 0.12)}
+            width={Math.max(20, Math.min(width, height) * 0.28)}
+            align="center"
+            fontSize={Math.max(12, Math.min(width, height) * 0.18)}
+            fontStyle="bold"
+            fill="#fff"
+          />
+        </Group>
       )}
 
       {unavailable && (

@@ -88,7 +88,7 @@ export function isCanvasLayout(data: SunbedLayoutData): boolean {
 export function layoutObjectToSunbed(obj: LayoutObject): LayoutSunbed | null {
   if (!obj.sunbed_id || !obj.bookable) return null;
   return {
-    id: obj.sunbed_id,
+    id: Number(obj.sunbed_id),
     code: obj.code ?? obj.label ?? String(obj.sunbed_id),
     position: obj.id,
     type: obj.type,

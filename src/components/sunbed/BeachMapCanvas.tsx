@@ -26,13 +26,31 @@ const footpathWidth: Record<string, string> = {
 };
 
 const BeachMapCanvas = ({ areas, selectedIds, onToggleSunbed, layoutData }: BeachMapCanvasProps) => {
+  const normalizedIds = selectedIds.map((id) => Number(id));
+
   if (layoutData && isCanvasLayout(layoutData)) {
     return (
-      <LayoutRenderer
-        data={layoutData}
-        selectedIds={selectedIds}
-        onToggleSunbed={onToggleSunbed}
-      />
+      <div className="space-y-3">
+        <div className="flex flex-wrap gap-3 text-xs text-stone-600">
+          <span className="flex items-center gap-1.5">
+            <span className="w-3.5 h-3.5 rounded bg-stone-200 border" />
+            Available
+          </span>
+          <span className="flex items-center gap-1.5">
+            <span className="w-3.5 h-3.5 rounded bg-sky-600" />
+            Selected
+          </span>
+          <span className="flex items-center gap-1.5">
+            <span className="w-3.5 h-3.5 rounded bg-red-500" />
+            Booked
+          </span>
+        </div>
+        <LayoutRenderer
+          data={layoutData}
+          selectedIds={normalizedIds}
+          onToggleSunbed={onToggleSunbed}
+        />
+      </div>
     );
   }
 
@@ -77,7 +95,7 @@ const BeachMapCanvas = ({ areas, selectedIds, onToggleSunbed, layoutData }: Beac
                           <SunbedIcon
                             key={sunbed.id}
                             sunbed={sunbed}
-                            selected={selectedIds.includes(sunbed.id)}
+                            selected={normalizedIds.includes(Number(sunbed.id))}
                             onClick={() => onToggleSunbed(sunbed)}
                           />
                         ))}

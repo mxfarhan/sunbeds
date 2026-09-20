@@ -21,7 +21,7 @@ const statusStyles: Record<SunbedStatus, string> = {
 };
 
 const SunbedIcon = ({ sunbed, selected, onClick, disabled, size = 'md' }: SunbedIconProps) => {
-  const isClickable = sunbed.status === 'available' && !disabled;
+  const isClickable = (sunbed.status === 'available' || selected) && !disabled;
   const dim = size === 'sm' ? 'w-12 h-14' : 'w-14 h-16';
 
   return (
@@ -29,7 +29,8 @@ const SunbedIcon = ({ sunbed, selected, onClick, disabled, size = 'md' }: Sunbed
       type="button"
       disabled={!isClickable}
       onClick={isClickable ? onClick : undefined}
-      title={`${sunbed.code} — €${sunbed.price}`}
+      title={`${sunbed.code} — €${sunbed.price}${selected ? ' (selected)' : ''}`}
+      aria-pressed={selected}
       className={cn(
         'relative flex flex-col items-center justify-end transition-transform',
         isClickable && 'cursor-pointer hover:scale-105',
@@ -42,7 +43,7 @@ const SunbedIcon = ({ sunbed, selected, onClick, disabled, size = 'md' }: Sunbed
           'relative rounded-lg overflow-hidden',
           dim,
           statusStyles[sunbed.status],
-          selected && 'ring-2 ring-[var(--primary-color)] ring-offset-2',
+          selected && 'ring-2 ring-sky-600 ring-offset-2 bg-sky-100/80',
           sunbed.status === 'booked' && 'after:absolute after:inset-0 after:bg-red-500/40 after:rounded-lg',
           sunbed.status === 'locked' && 'after:absolute after:inset-0 after:bg-amber-400/35 after:rounded-lg'
         )}
@@ -54,8 +55,15 @@ const SunbedIcon = ({ sunbed, selected, onClick, disabled, size = 'md' }: Sunbed
           className="object-contain"
           sizes="56px"
         />
+        {selected && (
+          <span className="absolute top-0.5 right-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-sky-700 text-[10px] font-bold text-white">
+            ✓
+          </span>
+        )}
       </div>
-      <span className="text-[10px] font-bold textPrimaryColor mt-0.5 leading-none">{sunbed.position}</span>
+      <span className={cn('text-[10px] font-bold mt-0.5 leading-none', selected ? 'text-sky-700' : 'textPrimaryColor')}>
+        {sunbed.position}
+      </span>
     </button>
   );
 };
