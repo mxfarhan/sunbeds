@@ -15,17 +15,18 @@ interface PropertySlugPageProps {
 
 const PropertySlugPage = ({ propertyResData, resortResData, preferResort }: PropertySlugPageProps) => {
   const bookingMode = useSelector(bookingModeSelector);
-  const useResort = preferResort || bookingMode === 'sunbed';
+  const hasResort = !!resortResData?.data;
+  const useResort = preferResort || bookingMode === 'sunbed' || hasResort;
 
-  if (useResort && resortResData?.data) {
+  if (useResort && hasResort) {
     return <ResortBookingPage resortResData={resortResData} />;
   }
 
-  if (propertyResData) {
+  if (propertyResData?.data) {
     return <PropertyDetailsPage propertyResData={propertyResData} />;
   }
 
-  if (resortResData?.data) {
+  if (hasResort) {
     return <ResortBookingPage resortResData={resortResData} />;
   }
 

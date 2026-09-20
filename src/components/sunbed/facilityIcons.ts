@@ -30,8 +30,8 @@ import {
   PiHouseLine,
   PiUser,
   PiCheckCircle,
-  type IconType,
 } from 'react-icons/pi';
+import type { IconType } from 'react-icons';
 
 const EXACT: Record<string, IconType> = {
   'wi-fi': PiWifiHigh,
