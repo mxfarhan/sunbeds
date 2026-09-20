@@ -1,11 +1,12 @@
 import axios from "axios";
 import { cache } from "react";
 import { RoomsApiResponse } from "@/hooks/queries/useRooms";
+import { getServerApiBase } from "@/lib/apiBase";
 
 export const getRoomDetails = cache(async ({ slug }: { slug: string }): Promise<RoomsApiResponse | null> => {
     try {
         const response = await axios.get(
-            `${process.env.NEXT_PUBLIC_API_URL}/${process.env.NEXT_PUBLIC_END_POINT}/properties/rooms`,
+            `${getServerApiBase()}/properties/rooms`,
             { params: { room_slug: slug } }
         );
         const data = response.data;

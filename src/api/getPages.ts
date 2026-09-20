@@ -1,5 +1,6 @@
 import axios from "axios";
 import { cache } from "react";
+import { getServerApiBase } from "@/lib/apiBase";
 
 export interface PolicySection {
   title: string;
@@ -27,7 +28,7 @@ export const getLegalPolicy = cache(async ({
 }): Promise<PolicyData | null> => {
   try {
     const response = await axios.get(
-      `${process.env.NEXT_PUBLIC_API_URL}/${process.env.NEXT_PUBLIC_END_POINT}/legal-policies`,
+      `${getServerApiBase()}/legal-policies`,
       { params: { lang, type } }
     );
     const data = response.data;

@@ -5,12 +5,11 @@ import Layout from "@/components/layout/Layout"
 import NoDataFound from "@/components/systemStates/NoDataFound"
 import JsonLd from "@/components/Schema/JsonLd"
 import axios from "axios"
+import { getServerApiBase } from "@/lib/apiBase"
 
 async function getSettingsBasicDetails() {
   try {
-    const response = await axios.get(
-      `${process.env.NEXT_PUBLIC_API_URL}/${process.env.NEXT_PUBLIC_END_POINT}/settings`
-    );
+    const response = await axios.get(`${getServerApiBase()}/settings`);
     return response.data?.data?.basic_details ?? null;
   } catch {
     return null;
@@ -19,10 +18,8 @@ async function getSettingsBasicDetails() {
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string, langCode: string }> }) {
     const { slug, langCode } = await params
-    const basicDetails = await getSettingsBasicDetails()
-    const isSunbedMode = basicDetails?.booking_mode === 'sunbed' || basicDetails?.property_type === 'Resort'
 
-    const resort = isSunbedMode ? await getResortDetails({ slug }) : null
+    const resort = await getResortDetails({ slug })
     const property = !resort?.data ? await getPropertyDetails({ slug }) : null
     const data = resort?.data ?? property?.data
 
@@ -59,8 +56,9 @@ const Page = async ({ params }: { params: Promise<{ slug: string }> }) => {
     const basicDetails = await getSettingsBasicDetails()
     const isSunbedMode = basicDetails?.booking_mode === 'sunbed' || basicDetails?.property_type === 'Resort'
 
+    // Always try both — settings SSR can fail; resort slug still needs resort API
     const [resortRes, propertyRes] = await Promise.all([
-        isSunbedMode ? getResortDetails({ slug }) : Promise.resolve(null),
+        getResortDetails({ slug }),
         getPropertyDetails({ slug }),
     ])
 
@@ -85,7 +83,7 @@ const Page = async ({ params }: { params: Promise<{ slug: string }> }) => {
             <PropertySlugPage
                 propertyResData={propertyRes}
                 resortResData={resortRes}
-                preferResort={isSunbedMode}
+                preferResort={isSunbedMode || !!resortRes?.data}
             />
             {schemaMarkup && <JsonLd data={schemaMarkup} />}
         </div>

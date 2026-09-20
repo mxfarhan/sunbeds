@@ -1,11 +1,12 @@
 import axios from "axios";
 import { cache } from "react";
 import { PropertiesApiResponse } from "@/hooks/queries/usePropertyDetails";
+import { getServerApiBase } from "@/lib/apiBase";
 
 export const getPropertyDetails = cache(async ({ slug }: { slug: string }): Promise<PropertiesApiResponse | null> => {
   try {
     const response = await axios.get(
-      `${process.env.NEXT_PUBLIC_API_URL}/${process.env.NEXT_PUBLIC_END_POINT}/property-details`,
+      `${getServerApiBase()}/property-details`,
       { params: { slug } }
     );
     const data = response.data;

@@ -2,6 +2,7 @@ import Layout from "@/components/layout/Layout"
 import BlogDetails from "@/components/pagesComponent/blogs/BlogDetails"
 import NoDataFound from "@/components/systemStates/NoDataFound"
 import axios from "axios"
+import { getServerApiBase } from "@/lib/apiBase"
 
 export interface BlogCategory {
     id: number
@@ -38,7 +39,7 @@ export interface BlogData {
 async function getBlogBySlug(slug: string): Promise<BlogData | null> {
     try {
         const res = await axios.get(
-            `${process.env.NEXT_PUBLIC_API_URL}/${process.env.NEXT_PUBLIC_END_POINT}/blogs/${slug}`,
+            `${getServerApiBase()}/blogs/${slug}`,
         )
 
         if (res.data.error || res.data.code !== 200) return null
