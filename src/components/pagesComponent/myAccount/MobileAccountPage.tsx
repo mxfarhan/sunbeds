@@ -38,6 +38,7 @@ import { currentCurreyCodeSelector } from '@/redux/reducers/currencySlice'
 import { BasicDetails } from '@/hooks/queries/useSettings'
 import { userDetailsType } from '@/types/GlobalTypes'
 import LogoutConfModal from '@/components/modalsAndSheets/LogoutConfModal'
+import { getOwnerPanelUrl } from '@/lib/ownerPanel'
 import CurrencyModal from '@/components/modalsAndSheets/CurrencyModal'
 import LanguageModal from '@/components/modalsAndSheets/LanguageModal'
 import SigninModal from '@/components/auth/SigninModal'
@@ -125,7 +126,7 @@ const MobileAccountPage = () => {
         ...(!isSingleHotel ? [{
             titleKey: 'partnerBusiness',
             items: [
-                { labelKey: 'listYourProperty', icon: <PiHandshake size={20} />, href: '/list-property' },
+                { labelKey: 'listYourProperty', icon: <PiHandshake size={20} />, href: getOwnerPanelUrl() },
             ],
         }] : []),
         {
@@ -161,7 +162,7 @@ const MobileAccountPage = () => {
         ...(!isSingleHotel ? [{
             titleKey: 'partnerBusiness',
             items: [
-                { labelKey: 'listYourProperty', icon: <PiHandshake size={20} />, href: '/list-property' },
+                { labelKey: 'listYourProperty', icon: <PiHandshake size={20} />, href: getOwnerPanelUrl() },
             ],
         }] : []),
         {
@@ -270,6 +271,14 @@ const MobileAccountPage = () => {
                                             <button key={item.labelKey} type="button" onClick={item.onClick} className="w-full text-left">
                                                 {inner}
                                             </button>
+                                        )
+                                    }
+                                    const isExternal = !!item.href?.startsWith('http')
+                                    if (isExternal) {
+                                        return (
+                                            <a key={item.labelKey} href={item.href}>
+                                                {inner}
+                                            </a>
                                         )
                                     }
                                     return (

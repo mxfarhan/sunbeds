@@ -18,6 +18,7 @@ import { usePrefetchedSettings } from '@/components/SettingsHydrator';
 import { currentLangCodeSelector } from '@/redux/reducers/languageSlice';
 import { setIsFromSearch, setLoginModalState } from '@/redux/reducers/helpersReducer';
 import { Button } from '@/components/storyBook/atoms/Button';
+import { getOwnerPanelUrl } from '@/lib/ownerPanel';
 
 const Header = () => {
 
@@ -25,6 +26,7 @@ const Header = () => {
     const pathname = usePathname();
     const params = useParams();
     const dispatch = useDispatch();
+    const ownerPanelUrl = getOwnerPanelUrl();
 
     const isLogin = useSelector(isLoginSelector);
     // Prefer server-prefetched settings so SSR + first client paint match (redux-persist
@@ -216,10 +218,10 @@ const Header = () => {
                             isSunbedMode && !isSingleHotel &&
                             <div className='flexCenter gap-4'>
                                 <LanguageModal />
-                                <Link href={'/list-property'} className='max-xl:hidden flexCenter gap-2 border py-2 px-4 rounded-full'>
+                                <a href={ownerPanelUrl} className='max-xl:hidden flexCenter gap-2 border py-2 px-4 rounded-full'>
                                     <PiBuildings size={24} />
                                     <span>{t('listYourResort')}</span>
-                                </Link>
+                                </a>
                                 {
                                     isLoggedIn ? (
                                         <ProfileDropdown />
@@ -239,10 +241,10 @@ const Header = () => {
                             !isSingleHotel && !isSunbedMode &&
                             <nav className='flexCenter gap-4'>
                                 <LanguageModal />
-                                <Link href={'/list-property'} className='flexCenter gap-2 border py-2 px-4 rounded-full'>
+                                <a href={ownerPanelUrl} className='flexCenter gap-2 border py-2 px-4 rounded-full'>
                                     <PiBuildings size={24} />
                                     <span>{isSunbedMode ? t('listYourResort') : t('listYourProperty')}</span>
-                                </Link>
+                                </a>
                                 {
                                     isLoggedIn ? (
                                         <ProfileDropdown />

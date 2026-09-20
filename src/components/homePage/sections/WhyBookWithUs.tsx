@@ -4,17 +4,18 @@ import Icon2 from '@/assets/images/securePayment.svg'
 import Icon3 from '@/assets/images/confimation.svg'
 import Icon4 from '@/assets/images/support.svg'
 import { PiArrowRight } from 'react-icons/pi'
-import Link from 'next/link'
 import { useTranslation } from '@/hooks/useTranslation'
 import SectionInfo from '@/components/storyBook/molecules/SectionInfo'
 import { Typography } from '@/components/storyBook/atoms/Typography'
 import ImagePreview from '@/components/storyBook/atoms/ImagePreview'
 import Divider from '@/components/storyBook/atoms/Divider'
+import { getOwnerPanelUrl } from '@/lib/ownerPanel'
 
 
 const WhyBookWithUs = () => {
 
     const { t } = useTranslation()
+    const ownerPanelUrl = getOwnerPanelUrl()
 
     const features = [
         {
@@ -97,10 +98,10 @@ const WhyBookWithUs = () => {
                         </div>
 
                         {/* CTA Button */}
-                        <Link href={'/'} className="primaryBtn btn_md between-992-1199:text-base md:btn_lg flexCenter gap-2 w-full text-center lg:w-fit ">
-                            {t('listYourProperty')}
+                        <a href={ownerPanelUrl} className="primaryBtn btn_md between-992-1199:text-base md:btn_lg flexCenter gap-2 w-full text-center lg:w-fit ">
+                            {t('listYourResort') || t('listYourProperty')}
                             <PiArrowRight className="text-2xl rtl:rotate-180" />
-                        </Link>
+                        </a>
                     </div>
                 </div>
             </div>
