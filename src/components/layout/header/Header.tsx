@@ -90,7 +90,7 @@ const Header = () => {
             icon: <PiHouse />
 
         },
-        businessMode?.no_of_properties > 1 ? {
+        (businessMode?.no_of_properties ?? 0) > 1 ? {
             id: 2,
             label: t('properties'),
             link: `/${langCode}/properties`,

@@ -45,6 +45,14 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "dev-estay.thewrteam.in",
       },
+      {
+        protocol: "https",
+        hostname: "sun.genlenz.com",
+      },
+      {
+        protocol: "https",
+        hostname: "beds.genlenz.com",
+      },
       ...storagePatterns,
     ],
   },

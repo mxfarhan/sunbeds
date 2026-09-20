@@ -33,14 +33,15 @@ export const useLangTranslations = (filters: TranslationsFilters) => {
                 return response as TranslationsApiResponse;
             } catch {
                 return {
-                    success: true,
+                    error: false,
+                    code: 200,
                     message: 'Using local translations',
                     data: {
                         lang_code: filters.lang_code ?? 'en',
                         platform_type: 'web',
                         translations: localEn as Record<string, string>,
                     },
-                } as TranslationsApiResponse;
+                };
             }
         },
     });

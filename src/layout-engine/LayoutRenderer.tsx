@@ -33,7 +33,7 @@ export default function LayoutRenderer({ data, selectedIds, onToggleSunbed }: La
       setSize({ width, height: Math.max(400, height) });
       const scale = Math.min((width - 40) / layout.width, (height - 40) / layout.height, 0.65);
       setZoom(scale);
-      setPan(20, 20);
+      setPan({ x: 20, y: 20 });
     });
     ro.observe(el);
     return () => ro.disconnect();
