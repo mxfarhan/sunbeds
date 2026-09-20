@@ -44,7 +44,12 @@ export interface ResortDetails {
   allow_reviews: boolean;
   media: ResortMedia[];
   images: string[];
-  facilities: string[];
+  facilities: string[] | Array<{
+    id: number;
+    name: string;
+    icon?: string | null;
+    category?: string | null;
+  }>;
   areas: ResortArea[];
   slots: ResortSlot[];
 }

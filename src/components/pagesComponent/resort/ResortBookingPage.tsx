@@ -8,7 +8,7 @@ import ImagePreview from '@/components/storyBook/atoms/ImagePreview';
 import RoomImgsSlider from '@/components/storyBook/atoms/RoomImgsSlider/RoomImgsSlider';
 import PropertyRating from '@/components/storyBook/atoms/PropertyRating';
 import PropertyPrice from '@/components/storyBook/atoms/PropertyPrice';
-import { Amenities } from '@/components/storyBook/atoms/Amenities';
+import ResortFacilitiesSection from '@/components/sunbed/ResortFacilitiesSection';
 import { Skeleton } from '@/components/ui/skeleton';
 import NoDataFound from '@/components/systemStates/NoDataFound';
 import { PiMapPin, PiPath } from 'react-icons/pi';
@@ -68,12 +68,17 @@ const ResortBookingPage = ({ resortResData }: ResortBookingPageProps) => {
     );
   }
 
-  const facilities = resort.facilities.map((name, i) => ({
-    id: i,
-    name,
-    icon: null,
-    category: null,
-  }));
+  const facilities = (resort.facilities ?? []).map((item, i) => {
+    if (typeof item === 'string') {
+      return { id: i + 1, name: item, icon: null as string | null, category: null as string | null };
+    }
+    return {
+      id: item.id ?? i + 1,
+      name: item.name,
+      icon: item.icon ?? null,
+      category: item.category ?? null,
+    };
+  });
 
   const openLightbox = (index: number) => {
     setLightboxIndex(index);
@@ -230,7 +235,7 @@ const ResortBookingPage = ({ resortResData }: ResortBookingPageProps) => {
               )}
 
               {facilities.length > 0 && (
-                <Amenities amenities={facilities} />
+                <ResortFacilitiesSection facilities={facilities} />
               )}
             </div>
 
