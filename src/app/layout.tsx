@@ -27,6 +27,15 @@ export const metadata: Metadata = {
   description: process.env.NEXT_PUBLIC_DESCRIPTION,
   keywords: process.env.NEXT_PUBLIC_KEYWORDS,
   manifest: "/manifest.json",
+  icons: {
+    icon: [
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/favicon.png", type: "image/png", sizes: "64x64" },
+      { url: "/favicon-96x96.png", type: "image/png", sizes: "96x96" },
+    ],
+    apple: [{ url: "/apple-touch-icon.png", sizes: "180x180" }],
+    shortcut: ["/favicon.ico"],
+  },
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
@@ -39,11 +48,13 @@ export const metadata: Metadata = {
     type: "website",
     title: process.env.NEXT_PUBLIC_TITLE,
     description: process.env.NEXT_PUBLIC_DESCRIPTION,
+    images: [{ url: "/logo-pliiz.png" }],
   },
   twitter: {
     card: "summary",
     title: process.env.NEXT_PUBLIC_TITLE,
     description: process.env.NEXT_PUBLIC_DESCRIPTION,
+    images: ["/logo-pliiz.png"],
   },
 };
 
